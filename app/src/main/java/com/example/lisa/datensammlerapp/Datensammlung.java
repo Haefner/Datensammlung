@@ -2,6 +2,7 @@ package com.example.lisa.datensammlerapp;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
@@ -213,7 +214,8 @@ public class Datensammlung extends AppCompatActivity {
                 return;
             }
             //minDistance Angabe in Meter
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, time, 1, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, time, 0.001f, locationListener);
+
         } else {
             throw new RuntimeException("SensorTyp is not defined");
         }
