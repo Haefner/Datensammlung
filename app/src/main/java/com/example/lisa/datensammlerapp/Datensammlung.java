@@ -190,7 +190,7 @@ public class Datensammlung extends AppCompatActivity {
         } else if (sensorTyp == SensorTyp.LIGHT) {
             sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), time);
         } else if (sensorTyp == SensorTyp.LOCATION) {
-            //Pr�fe ob Berechtigung f�r GPS vorliegt
+            //Pruefe ob Berechtigung fuer GPS vorliegt
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 swchLo.setChecked(false);
                 swchLoState = false; //FIXME koennte Event ausloesen
