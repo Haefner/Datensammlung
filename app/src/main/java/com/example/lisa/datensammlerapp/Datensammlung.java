@@ -241,25 +241,25 @@ public class Datensammlung extends AppCompatActivity {
         acValX = findViewById(R.id.acValX);
         acValY = findViewById(R.id.acValY);
         acValZ = findViewById(R.id.acValZ);
-        //acHz = findViewById(R.id.acHz);
+        acHz = findViewById(R.id.acHz);
 
         //ID's for Gyroscope
         swchGy = findViewById(R.id.swchGy);
         gyValX = findViewById(R.id.gyValX);
         gyValY = findViewById(R.id.gyValY);
         gyValZ = findViewById(R.id.gyValZ);
-        //gyHz = findViewById(R.id.gyHz);
+        gyHz = findViewById(R.id.gyHz);
 
         //ID's for Localisation
         swchLo = findViewById(R.id.swchLo);
         loValLo = findViewById(R.id.loValLo);
         loValLa = findViewById(R.id.loValLa);
-      //  loHz = findViewById(R.id.loHz);
+        loHz = findViewById(R.id.loHz);
 
         //Id's für Licht
         swchLi = findViewById(R.id.swchLi);
         liValCa = findViewById(R.id.liValCa);
-      //  liHz = findViewById(R.id.liHz);
+        liHz = findViewById(R.id.liHz);
 
         //Sonstiges
         //Record
