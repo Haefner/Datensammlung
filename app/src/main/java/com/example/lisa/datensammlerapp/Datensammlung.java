@@ -208,9 +208,8 @@ public class Datensammlung extends AppCompatActivity {
             if (!locationManager
                     .isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 swchLo.setChecked(false);
-                swchLoState = false; //FIXME koennte Event ausloesen
-                // TODO Fehlermeldung anzeigen, das GPS ausgeschaltet ist
-                // TODO pruefe ob hier deaktiviere Listener durch das aendern der Variable ausgeloest werden kann
+                swchLoState = false;
+                startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
                 return;
             }
             //minDistance Angabe in Meter
