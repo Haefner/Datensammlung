@@ -59,8 +59,8 @@ public class MyLocationListener implements LocationListener {
     public void onLocationChanged(android.location.Location location) {
 
         findAddressValues(location);
-        loValLa.setText(loValLa.toString());
-        loValLo.setText(loValLo.toString());
+        loValLa.setText("Latitude = " + latitude);
+        loValLo.setText("Longitude =" + longitude);
     }
 
     @Override
