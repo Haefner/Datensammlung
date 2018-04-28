@@ -17,7 +17,7 @@
         android:inputType="numberDecimal"
         app:layout_constraintBaseline_toBaselineOf="@+id/gyValX"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
@@ -31,7 +31,7 @@
         android:inputType="numberDecimal"
         app:layout_constraintBaseline_toBaselineOf="@+id/liValCa"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.81"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
@@ -45,7 +45,7 @@
         android:inputType="numberDecimal"
         app:layout_constraintBaseline_toBaselineOf="@+id/loValLo"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
@@ -136,7 +136,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="@string/longitudinal"
+        android:text="@string/longitude"
         app:layout_constraintBaseline_toBaselineOf="@+id/swchLo"
         app:layout_constraintStart_toEndOf="@+id/swchLo" />
 
@@ -146,7 +146,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:text="@string/lateral"
+        android:text="@string/latitude"
         app:layout_constraintStart_toEndOf="@+id/swchLo"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
@@ -165,10 +165,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:text="TextView"
+        android:text="Y"
         app:layout_constraintStart_toEndOf="@+id/swchGy"
-        app:layout_constraintTop_toBottomOf="@+id/textView7"
-        tools:text="Y" />
+        app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     <TextView
         android:id="@+id/textView9"
@@ -277,8 +276,8 @@
 
     <TextView
         android:id="@+id/gyValZ"
-        android:layout_width="44dp"
-        android:layout_height="wrap_content"
+        android:layout_width="62dp"
+        android:layout_height="21dp"
         android:layout_marginStart="16dp"
         android:text="gyValZ"
         app:layout_constraintBaseline_toBaselineOf="@+id/textView9"
@@ -330,7 +329,7 @@
         android:inputType="numberDecimal"
         app:layout_constraintBaseline_toBaselineOf="@+id/acValX"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.8"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
