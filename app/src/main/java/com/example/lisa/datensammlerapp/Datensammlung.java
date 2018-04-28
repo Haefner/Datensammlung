@@ -199,15 +199,9 @@ public class Datensammlung extends AppCompatActivity {
             //Pruefe ob Berechtigung fuer GPS vorliegt
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 swchLo.setChecked(false);
-                swchLoState = false; //FIXME koennte Event ausloesen
-                // TODO Fehlermeldung anzeigen, da Berechtiung nicht vorhanden ist,
-                // TODO pruefe ob hier deaktiviere Listener durch das aendern der Variable ausgeloest werden kann
-                //    ActivityCompat#requestPermissions
-                // here to request the missing permissions, and then overriding
-                //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                //                                          int[] grantResults)
-                // to handle the case where the user grants the permission. See the documentation
-                // for ActivityCompat#requestPermissions for more details.
+                swchLoState = false;
+                // Meldung anzeigen, dass die Berechtiung nicht vorhanden ist, und erteilt werden muss
+                ActivityCompat.requestPermissions(Datensammlung.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
                 return;
             }
             //Pruefe ob GPS aktiviert ist
