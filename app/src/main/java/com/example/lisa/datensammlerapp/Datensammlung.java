@@ -76,8 +76,8 @@ public class Datensammlung extends AppCompatActivity {
         setContentView(R.layout.activity_datensammlung);
         setUpIDs();
         setUpSensorManager();
-        setUpSwitch();
         setUpLocationManager();
+        setUpSwitch();
     }
 
     private void setUpLocationManager() {
@@ -99,7 +99,10 @@ public class Datensammlung extends AppCompatActivity {
                 }
             }
         });
+
         //Auswertung welche Sensordaten gemessen werden sollen
+
+        //Accelorometer
         swchAc.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -111,6 +114,7 @@ public class Datensammlung extends AppCompatActivity {
                 }
             }
         });
+        //Gyroscope
         swchGy.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,6 +126,7 @@ public class Datensammlung extends AppCompatActivity {
                 }
             }
         });
+        //Location
         swchLo.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -133,6 +138,7 @@ public class Datensammlung extends AppCompatActivity {
                 }
             }
         });
+        //Licht
         swchLi.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
