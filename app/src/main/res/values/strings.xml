@@ -3,8 +3,8 @@
     <string name="headAc">Accelometer</string>
     <string name="headGy">Gyroscope</string>
     <string name="headLo">Location</string>
-    <string name="longitudinal">Longitudinal</string>
-    <string name="lateral">Lateral</string>
+    <string name="longitude">Longitude</string>
+    <string name="latitude">Latitude</string>
     <string name="record">Record</string>
     <string name="headLi">Front Light</string>
     <string name="candela">Candela</string>
