@@ -7,9 +7,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.support.v4.app.ActivityCompat;
@@ -17,12 +14,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.Locale;
 
 public class Datensammlung extends AppCompatActivity {
 
@@ -33,7 +27,6 @@ public class Datensammlung extends AppCompatActivity {
     LocationManager locationManager;
     LocationListener locationListener;
 
-
     /**
      * Angabe ob Messung des Accelerometer aktiv ist
      */
@@ -42,6 +35,7 @@ public class Datensammlung extends AppCompatActivity {
     TextView acValX;
     TextView acValY;
     TextView acValZ;
+    EditText acHz;
 
     /**
      * Angabe ob Messung des Gyroscope aktiv ist
@@ -51,14 +45,16 @@ public class Datensammlung extends AppCompatActivity {
     TextView gyValX;
     TextView gyValY;
     TextView gyValZ;
+    EditText gyHz;
 
     /**
      * Angabe ob Messung der GPS-Daten aktiv ist
      */
     Boolean swchLoState;
     Switch swchLo;
-    TextView loVaLo;
+    TextView loValLo;
     TextView loValLa;
+    EditText loHz;
 
     /**
      * Angabe ob Messung der Lichsensoren aktiv ist
@@ -66,6 +62,7 @@ public class Datensammlung extends AppCompatActivity {
     Boolean swchLiState;
     Switch swchLi;
     TextView liValCa;
+    EditText liHz;
 
     /**
      * Angabe ob die Daten aufgezeichnet werden
@@ -85,7 +82,7 @@ public class Datensammlung extends AppCompatActivity {
 
     private void setUpLocationManager() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationListener = new MyLocationListener(getApplicationContext(),loVaLo,loValLa);
+        locationListener = new MyLocationListener(getApplicationContext(), loValLo,loValLa);
     }
 
 
@@ -193,12 +190,12 @@ public class Datensammlung extends AppCompatActivity {
         } else if (sensorTyp == SensorTyp.LIGHT) {
             sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), time);
         } else if (sensorTyp == SensorTyp.LOCATION) {
-            //Prüfe ob Berechtigung für GPS vorliegt
+            //Pr�fe ob Berechtigung f�r GPS vorliegt
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                 swchLo.setChecked(false);
-                swchLoState = false; //FIXME könnte Event auslösen
+                swchLoState = false; //FIXME koennte Event ausloesen
                 // TODO Fehlermeldung anzeigen, da Berechtiung nicht vorhanden ist,
-                // TODO prüfe ob hier deaktiviere Listener durch das Ändern der Variable ausgelöst werden kann
+                // TODO pruefe ob hier deaktiviere Listener durch das aendern der Variable ausgeloest werden kann
                 //    ActivityCompat#requestPermissions
                 // here to request the missing permissions, and then overriding
                 //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
@@ -211,9 +208,9 @@ public class Datensammlung extends AppCompatActivity {
             if (!locationManager
                     .isProviderEnabled(LocationManager.GPS_PROVIDER)) {
                 swchLo.setChecked(false);
-                swchLoState = false; //FIXME könnte Event auslösen
+                swchLoState = false; //FIXME koennte Event ausloesen
                 // TODO Fehlermeldung anzeigen, das GPS ausgeschaltet ist
-                // TODO prüfe ob hier deaktiviere Listener durch das Ändern der Variable ausgelöst werden kann
+                // TODO pruefe ob hier deaktiviere Listener durch das aendern der Variable ausgeloest werden kann
                 return;
             }
             //minDistance Angabe in Meter
@@ -239,13 +236,33 @@ public class Datensammlung extends AppCompatActivity {
 
     protected void setUpIDs() {
         //ID's for Accelerometer
+        swchAc = findViewById(R.id.swchAc);
+        acValX = findViewById(R.id.acValX);
+        acValY = findViewById(R.id.acValY);
+        acValZ = findViewById(R.id.acValZ);
+        //acHz = findViewById(R.id.acHz);
 
         //ID's for Gyroscope
+        swchGy = findViewById(R.id.swchGy);
+        gyValX = findViewById(R.id.gyValX);
+        gyValY = findViewById(R.id.gyValY);
+        gyValZ = findViewById(R.id.gyValZ);
+        //gyHz = findViewById(R.id.gyHz);
 
         //ID's for Localisation
+        swchLo = findViewById(R.id.swchLo);
+        loValLo = findViewById(R.id.loValLo);
+        loValLa = findViewById(R.id.loValLa);
+      //  loHz = findViewById(R.id.loHz);
+
+        //Id's für Licht
+        swchLi = findViewById(R.id.swchLi);
+        liValCa = findViewById(R.id.liValCa);
+      //  liHz = findViewById(R.id.liHz);
 
         //Sonstiges
-        //swchRe = (Switch) findViewById(R.id.swchRe);
+        //Record
+        swchRe = findViewById(R.id.swchRe);
 
     }
 }
