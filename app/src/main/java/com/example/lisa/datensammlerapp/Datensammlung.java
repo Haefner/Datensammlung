@@ -10,6 +10,8 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.StrictMode;
+import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +20,8 @@ import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import java.io.IOException;
 
 public class Datensammlung extends AppCompatActivity {
 
@@ -71,6 +75,7 @@ public class Datensammlung extends AppCompatActivity {
     Boolean swchReState = false;
     Switch swchRe;
 
+    String androidId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +84,9 @@ public class Datensammlung extends AppCompatActivity {
         setUpSensorManager();
         setUpLocationManager();
         setUpSwitch();
+        androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
     }
 
     private void setUpLocationManager() {
@@ -94,9 +102,10 @@ public class Datensammlung extends AppCompatActivity {
             public void onClick(View v) {
                 swchReState = swchRe.isChecked();
                 if (swchRe.isChecked()) {
-                    datenaufnahme.startRecordDate();
+                    datenaufnahme.startRecordDate(androidId);
+                    //acValX.setText(androidId);
                 } else {
-                    datenaufnahme.stopRecordDate();
+                    datenaufnahme.stopRecordDate(androidId);
                 }
             }
         });
@@ -171,16 +180,28 @@ public class Datensammlung extends AppCompatActivity {
                         gyValX.setText("X " + event.values[0] );
                         gyValY.setText("Y " + event.values[1] );
                         gyValZ.setText("Z " + event.values[2] );
+                        if (swchReState)
+                        {
+                            datenaufnahme.recordGyroscope(androidId, event.values[0], event.values[1], event.values[2]);
+                        }
                         break;
                     //Bewegungssensor Liniar
                     case Sensor.TYPE_ACCELEROMETER:
                         acValX.setText("X " + event.values[0] );
                         acValY.setText("Y " + event.values[1] );
                         acValZ.setText("Z " + event.values[2] );
+                        if (swchReState)
+                        {
+                            datenaufnahme.recordAccelometer(androidId, event.values[0], event.values[1], event.values[2]);
+                        }
                         break;
                     //Lichsensor
                     case Sensor.TYPE_LIGHT:
                         liValCa.setText("Lichtwert" + event.values[0]);
+                        if (swchReState)
+                        {
+                            datenaufnahme.recordLight(androidId, event.values[0]);
+                        }
                         break;
                 }
 

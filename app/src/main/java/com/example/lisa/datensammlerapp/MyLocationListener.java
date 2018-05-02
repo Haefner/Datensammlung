@@ -6,6 +6,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.LocationListener;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.widget.TextView;
 
 import java.io.IOException;
@@ -25,6 +26,8 @@ public class MyLocationListener implements LocationListener {
     private String knownName;
     private String longitude;
     private String latitude;
+
+    DataRecord datenaufnahme = new DataRecord();
 
     public MyLocationListener(Context context, TextView loValLo, TextView loValLa)
     {
@@ -61,6 +64,7 @@ public class MyLocationListener implements LocationListener {
         findAddressValues(location);
         loValLa.setText("Latitude = " + latitude);
         loValLo.setText("Longitude =" + longitude);
+        datenaufnahme.recordLocation(Settings.Secure.getString(applicationContext.getContentResolver(), Settings.Secure.ANDROID_ID), longitude, latitude);
     }
 
     @Override
