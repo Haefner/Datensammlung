@@ -26,7 +26,7 @@ import java.io.IOException;
 public class Datensammlung extends AppCompatActivity {
 
     DataRecord datenaufnahme = new DataRecord();
-
+    //Test
     SensorManager sensorManager;
     SensorEventListener sensorEventListener;
     LocationManager locationManager;
