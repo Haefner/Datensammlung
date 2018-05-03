@@ -41,7 +41,7 @@ public class Datensammlung extends AppCompatActivity {
     TextView acValY;
     TextView acValZ;
     EditText acHz;
-
+    //FefeNew
     /**
      * Angabe ob Messung des Gyroscope aktiv ist
      */
