@@ -363,6 +363,7 @@ public class Datensammlung extends AppCompatActivity {
         //ID's for Localisation
         swchLo = findViewById(R.id.swchLo);
         loValLo = findViewById(R.id.loValLo);
+        loValLa=findViewById(R.id.loValLa);
 
 
         //Id's für Licht
