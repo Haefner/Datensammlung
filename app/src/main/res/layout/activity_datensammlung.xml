@@ -223,7 +223,6 @@
         android:text="X"
         app:layout_constraintBaseline_toBaselineOf="@+id/swchRo"
         app:layout_constraintStart_toEndOf="@+id/swchRo" />
-
     <TextView
         android:id="@+id/roValX"
         android:layout_width="wrap_content"
@@ -242,7 +241,6 @@
         android:text="Y"
         app:layout_constraintStart_toEndOf="@+id/swchRo"
         app:layout_constraintTop_toBottomOf="@+id/textRoX" />
-
     <TextView
         android:id="@+id/roValY"
         android:layout_width="wrap_content"
@@ -261,7 +259,6 @@
         android:text="Z"
         app:layout_constraintStart_toEndOf="@+id/swchRo"
         app:layout_constraintTop_toBottomOf="@+id/textRoY" />
-
     <TextView
         android:id="@+id/roValZ"
         android:layout_width="62dp"
@@ -270,6 +267,24 @@
         android:text="roValZ"
         app:layout_constraintBaseline_toBaselineOf="@+id/textRoZ"
         app:layout_constraintStart_toEndOf="@+id/textRoZ" />
+
+    <TextView
+        android:id="@+id/degrees"
+        android:layout_width="62dp"
+        android:layout_height="21dp"
+        android:layout_marginStart="16dp"
+        android:text=" "
+        app:layout_constraintBaseline_toBaselineOf="@+id/roValZ"
+        app:layout_constraintStart_toEndOf="@+id/textDegrees" />
+
+    <TextView
+        android:id="@+id/textDegrees"
+        android:layout_width="62dp"
+        android:layout_height="21dp"
+        android:layout_marginStart="16dp"
+        android:text="degrees"
+        app:layout_constraintBaseline_toBaselineOf="@+id/degrees"
+        app:layout_constraintStart_toEndOf="@+id/roValZ" />
 
     <Spinner
         android:id="@+id/roHz"

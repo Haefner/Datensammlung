@@ -65,6 +65,7 @@ public class Datensammlung extends AppCompatActivity {
     TextView coValX;
     TextView coValY;
     TextView coValZ;
+    TextView degrees;
     Spinner coHz;
     Integer coFrequenz = 1000000;
 
@@ -298,6 +299,15 @@ public class Datensammlung extends AppCompatActivity {
                         if (swchReState) {
                             datenaufnahme.recordRotaion(androidId, event.values[0], event.values[1], event.values[2]);
                         }
+
+                        //Berechne Winkel
+                        float[] orientation = new float[3];
+                        float[] rMat = new float[9];
+                        // calculate th rotation matrix
+                        SensorManager.getRotationMatrixFromVector(rMat, event.values);
+                        // get the azimuth value (orientation[0]) in degree
+                        int grad=(int) (Math.toDegrees(SensorManager.getOrientation(rMat, orientation)[0]) + 360) % 360;
+                        degrees.setText(Integer.toString(grad));
                         break;
                     //Compass
                     case Sensor.TYPE_MAGNETIC_FIELD:
@@ -393,6 +403,7 @@ public class Datensammlung extends AppCompatActivity {
         roValX = findViewById(R.id.roValX);
         roValY = findViewById(R.id.roValY);
         roValZ = findViewById(R.id.roValZ);
+        degrees = findViewById(R.id.degrees);
         roHz = findViewById(R.id.roHz);
 
         //ID's for Compass
