@@ -33,8 +33,6 @@ public class Datensammlung extends AppCompatActivity {
     //Test
     SensorManager sensorManager;
     SensorEventListener sensorEventListener;
-    LocationManager locationManager;
-    LocationListener locationListener;
     LinkedList<Integer> frequenzbereich;
 
     /**
@@ -46,7 +44,7 @@ public class Datensammlung extends AppCompatActivity {
     TextView acValY;
     TextView acValZ;
     Spinner acHz;
-    Integer acFrequenz=1000000;
+    Integer acFrequenz = 1000000;
 
     /**
      * Angabe ob Messung des Gyroscope aktiv ist
@@ -57,26 +55,29 @@ public class Datensammlung extends AppCompatActivity {
     TextView gyValY;
     TextView gyValZ;
     Spinner gyHz;
-    Integer gyFrequenz=1000000;
+    Integer gyFrequenz = 1000000;
 
     /**
-     * Angabe ob Messung der GPS-Daten aktiv ist
+     * Angabe ob Messung des Rotation aktiv ist
      */
-    Boolean swchLoState;
-    Switch swchLo;
-    TextView loValLo;
-    TextView loValLa;
-
-
+    Boolean swchCoState;
+    Switch swchCo;
+    TextView coValX;
+    TextView coValY;
+    TextView coValZ;
+    Spinner coHz;
+    Integer coFrequenz = 1000000;
 
     /**
-     * Angabe ob Messung der Lichsensoren aktiv ist
+     * Angabe ob Messung des Kompass aktiv ist
      */
-    Boolean swchLiState;
-    Switch swchLi;
-    TextView liValCa;
-    Spinner liHz;
-    Integer liFrequenz=1000000;
+    Boolean swchRoState;
+    Switch swchRo;
+    TextView roValX;
+    TextView roValY;
+    TextView roValZ;
+    Spinner roHz;
+    Integer roFrequenz = 1000000;
 
     /**
      * Angabe ob die Daten aufgezeichnet werden
@@ -85,6 +86,7 @@ public class Datensammlung extends AppCompatActivity {
     Switch swchRe;
 
     String androidId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,7 +94,7 @@ public class Datensammlung extends AppCompatActivity {
         setUpIDs();
         setUpFreuenzBereich();
         setUpSensorManager();
-        setUpLocationManager();
+       // setUpLocationManager();
         setUpSwitch();
         androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -100,35 +102,33 @@ public class Datensammlung extends AppCompatActivity {
     }
 
     private void setUpFreuenzBereich() {
-        frequenzbereich=new LinkedList<>();
+        frequenzbereich = new LinkedList<>();
         frequenzbereich.add(1000000); //1 Sekunde
         frequenzbereich.add(250000); //viertel Selkunde
         frequenzbereich.add(100000); // 1/10 Sekunde
         frequenzbereich.add(10000); // 1/100 Sekunde
 
-        ArrayAdapter<Integer>  frequenzAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, frequenzbereich);
+        ArrayAdapter<Integer> frequenzAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, frequenzbereich);
         frequenzAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
         acHz.setAdapter(frequenzAdapter);
         gyHz.setAdapter(frequenzAdapter);
-        liHz.setAdapter(frequenzAdapter);
+        roHz.setAdapter(frequenzAdapter);
+        coHz.setAdapter(frequenzAdapter);
 
         acHz.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                acFrequenz=Integer.valueOf(String.valueOf(acHz.getSelectedItem()));
+                acFrequenz = Integer.valueOf(String.valueOf(acHz.getSelectedItem()));
                 //pruefe ob Messung laeut falls ja, deaktiviere Listener und aktiviere sie neu
-                if(swchAc.isChecked())
-                {
+                if (swchAc.isChecked()) {
                     deaktivateListener(SensorTyp.ACCELEROMETER);
                     registerListener(SensorTyp.ACCELEROMETER, acFrequenz);
                 }
-
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
 
@@ -136,10 +136,9 @@ public class Datensammlung extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                gyFrequenz=Integer.valueOf(String.valueOf(gyHz.getSelectedItem()));
+                gyFrequenz = Integer.valueOf(String.valueOf(gyHz.getSelectedItem()));
                 //pruefe ob Messung laeut falls ja, deaktiviere Listener und aktiviere sie neu
-                if(swchAc.isChecked())
-                {
+                if (swchGy.isChecked()) {
                     deaktivateListener(SensorTyp.GYROSCOPE);
                     registerListener(SensorTyp.GYROSCOPE, gyFrequenz);
                 }
@@ -147,36 +146,50 @@ public class Datensammlung extends AppCompatActivity {
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-
             }
         });
 
-        liHz.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        roHz.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 
-                liFrequenz=Integer.valueOf(String.valueOf(liHz.getSelectedItem()));
+                roFrequenz = Integer.valueOf(String.valueOf(roHz.getSelectedItem()));
                 //pruefe ob Messung laeut falls ja, deaktiviere Listener und aktiviere sie neu
-                if(swchAc.isChecked())
-                {
-                    deaktivateListener(SensorTyp.LIGHT);
-                    registerListener(SensorTyp.LIGHT, gyFrequenz);
+                if (swchRo.isChecked()) {
+                    deaktivateListener(SensorTyp.ROTATION);
+                    registerListener(SensorTyp.ROTATION, roFrequenz);
                 }
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
+        coHz.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                coFrequenz = Integer.valueOf(String.valueOf(coHz.getSelectedItem()));
+                //pruefe ob Messung laeut falls ja, deaktiviere Listener und aktiviere sie neu
+                if (swchCo.isChecked()) {
+                    deaktivateListener(SensorTyp.COMPASS);
+                    registerListener(SensorTyp.COMPASS, coFrequenz);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
             }
         });
 
 
     }
 
-    private void setUpLocationManager() {
-        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        locationListener = new MyLocationListener(getApplicationContext(), loValLo,loValLa);
-    }
+//    private void setUpLocationManager() {
+//        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+//        locationListener = new MyLocationListener(getApplicationContext(), loValLo, loValLa);
+//    }
 
 
     private void setUpSwitch() {
@@ -220,27 +233,27 @@ public class Datensammlung extends AppCompatActivity {
                 }
             }
         });
-        //Location
-        swchLo.setOnClickListener(new OnClickListener() {
+        //Compss
+        swchCo.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                swchLoState = swchLo.isChecked();
-                if (swchLo.isChecked()) {
-                    registerListener(SensorTyp.LOCATION, 1000000);
+                swchCoState = swchCo.isChecked();
+                if (swchCo.isChecked()) {
+                    registerListener(SensorTyp.COMPASS, coFrequenz);
                 } else {
-                    deaktivateListener(SensorTyp.LOCATION);
+                    deaktivateListener(SensorTyp.COMPASS);
                 }
             }
         });
-        //Licht
-        swchLi.setOnClickListener(new OnClickListener() {
+        //Rotation
+        swchRo.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                swchLiState = swchLi.isChecked();
-                if (swchLi.isChecked()) {
-                    registerListener(SensorTyp.LIGHT, liFrequenz);
+                swchRoState = swchRo.isChecked();
+                if (swchRo.isChecked()) {
+                    registerListener(SensorTyp.ROTATION, roFrequenz);
                 } else {
-                    deaktivateListener(SensorTyp.LIGHT);
+                    deaktivateListener(SensorTyp.ROTATION);
                 }
             }
         });
@@ -261,30 +274,38 @@ public class Datensammlung extends AppCompatActivity {
                 switch (event.sensor.getType()) {
                     //Beschleunigungssensor Drehmoment Winkelgeschwindigkeit
                     case Sensor.TYPE_GYROSCOPE:
-                        gyValX.setText(""+ event.values[0] );
-                        gyValY.setText(""+event.values[1] );
-                        gyValZ.setText(""+  event.values[2] );
-                        if (swchReState)
-                        {
+                        gyValX.setText("" + event.values[0]);
+                        gyValY.setText("" + event.values[1]);
+                        gyValZ.setText("" + event.values[2]);
+                        if (swchReState) {
                             datenaufnahme.recordGyroscope(androidId, event.values[0], event.values[1], event.values[2]);
                         }
                         break;
                     //Bewegungssensor Liniar
                     case Sensor.TYPE_ACCELEROMETER:
-                        acValX.setText("" + event.values[0] );
-                        acValY.setText("" + event.values[1] );
-                        acValZ.setText("" + event.values[2] );
-                        if (swchReState)
-                        {
+                        acValX.setText("" + event.values[0]);
+                        acValY.setText("" + event.values[1]);
+                        acValZ.setText("" + event.values[2]);
+                        if (swchReState) {
                             datenaufnahme.recordAccelometer(androidId, event.values[0], event.values[1], event.values[2]);
                         }
                         break;
-                    //Lichsensor
-                    case Sensor.TYPE_LIGHT:
-                        liValCa.setText("" + event.values[0]);
-                        if (swchReState)
-                        {
-                            datenaufnahme.recordLight(androidId, event.values[0]);
+                    //Rotation
+                    case Sensor.TYPE_ROTATION_VECTOR:
+                        roValX.setText("" + event.values[0]);
+                        roValY.setText("" + event.values[1]);
+                        roValZ.setText("" + event.values[2]);
+                        if (swchReState) {
+                            datenaufnahme.recordRotaion(androidId, event.values[0], event.values[1], event.values[2]);
+                        }
+                        break;
+                    //Compass
+                    case Sensor.TYPE_MAGNETIC_FIELD:
+                        coValX.setText("" + event.values[0]);
+                        coValY.setText("" + event.values[1]);
+                        coValZ.setText("" + event.values[2]);
+                        if (swchReState) {
+                            datenaufnahme.recordCompas(androidId, event.values[0], event.values[1], event.values[2]);
                         }
                         break;
                 }
@@ -296,37 +317,42 @@ public class Datensammlung extends AppCompatActivity {
 
     /**
      * Aktiviert das Aufzeichnen der Daten
+     *
      * @param sensorTyp ACCELEROMETER, GYROSCOPE, LOCATION, LIGHT
-     * @param time Zeit in Microsekunden
+     * @param time      Zeit in Microsekunden
      */
     private void registerListener(SensorTyp sensorTyp, int time) {
         if (sensorTyp == SensorTyp.ACCELEROMETER) {
             sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), time);
         } else if (sensorTyp == SensorTyp.GYROSCOPE) {
             sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE), time);
-        } else if (sensorTyp == SensorTyp.LIGHT) {
-            sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT), time);
-        } else if (sensorTyp == SensorTyp.LOCATION) {
-            //Pruefe ob Berechtigung fuer GPS vorliegt
-            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                swchLo.setChecked(false);
-                swchLoState = false;
-                // Meldung anzeigen, dass die Berechtiung nicht vorhanden ist, und erteilt werden muss
-                ActivityCompat.requestPermissions(Datensammlung.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
-                return;
-            }
-            //Pruefe ob GPS aktiviert ist
-            if (!locationManager
-                    .isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                swchLo.setChecked(false);
-                swchLoState = false;
-                startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                return;
-            }
-            //minDistance Angabe in Meter
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, time, 0.001f, locationListener);
-
-        } else {
+        } else if (sensorTyp == SensorTyp.ROTATION) {
+            sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR), time);
+        } else if (sensorTyp == SensorTyp.COMPASS) {
+            sensorManager.registerListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), time);
+        }
+//        } else if (sensorTyp == SensorTyp.LOCATION) {
+//            //Pruefe ob Berechtigung fuer GPS vorliegt
+//            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+//                swchLo.setChecked(false);
+//                swchLoState = false;
+//                // Meldung anzeigen, dass die Berechtiung nicht vorhanden ist, und erteilt werden muss
+//                ActivityCompat.requestPermissions(Datensammlung.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 1);
+//                return;
+//            }
+//            //Pruefe ob GPS aktiviert ist
+//            if (!locationManager
+//                    .isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+//                swchLo.setChecked(false);
+//                swchLoState = false;
+//                startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+//                return;
+//            }
+//            //minDistance Angabe in Meter
+//            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, time, 0.001f, locationListener);
+//
+//        }
+        else {
             throw new RuntimeException("SensorTyp is not defined");
         }
     }
@@ -336,10 +362,12 @@ public class Datensammlung extends AppCompatActivity {
             sensorManager.unregisterListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
         } else if (sensorTyp == SensorTyp.GYROSCOPE) {
             sensorManager.unregisterListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE));
-        } else if (sensorTyp == SensorTyp.LIGHT) {
-            sensorManager.unregisterListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_LIGHT));
-        } else if (sensorTyp == SensorTyp.LOCATION) {
-            locationManager.removeUpdates(locationListener);
+        } else if (sensorTyp == SensorTyp.ROTATION) {
+            sensorManager.unregisterListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR));
+        } else if (sensorTyp == SensorTyp.COMPASS) {
+            sensorManager.unregisterListener(sensorEventListener, sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD));
+//        } else if (sensorTyp == SensorTyp.LOCATION) {
+//            locationManager.removeUpdates(locationListener);
         } else {
             throw new RuntimeException("SensorTyp is not defined");
         }
@@ -360,16 +388,19 @@ public class Datensammlung extends AppCompatActivity {
         gyValZ = findViewById(R.id.gyValZ);
         gyHz = findViewById(R.id.gyHz);
 
-        //ID's for Localisation
-        swchLo = findViewById(R.id.swchLo);
-        loValLo = findViewById(R.id.loValLo);
-        loValLa=findViewById(R.id.loValLa);
+        //ID's for Rotation
+        swchRo = findViewById(R.id.swchRo);
+        roValX = findViewById(R.id.roValX);
+        roValY = findViewById(R.id.roValY);
+        roValZ = findViewById(R.id.roValZ);
+        roHz = findViewById(R.id.roHz);
 
-
-        //Id's für Licht
-        swchLi = findViewById(R.id.swchLi);
-        liValCa = findViewById(R.id.liValCa);
-        liHz = findViewById(R.id.liHz);
+        //ID's for Compass
+        swchCo = findViewById(R.id.swchCo);
+        coValX = findViewById(R.id.coValX);
+        coValY = findViewById(R.id.coValY);
+        coValZ = findViewById(R.id.coValZ);
+        coHz = findViewById(R.id.coHz);
 
         //Sonstiges
         //Record

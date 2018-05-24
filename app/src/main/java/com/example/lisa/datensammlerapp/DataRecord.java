@@ -93,4 +93,12 @@ public class DataRecord {
         Communicator com = new Communicator();
         com.execute("http://www.node.test.seda.com.de/schreibeSensor", body.toString());
     }
+
+    public void recordRotaion(String androidId, float value, float value1, float value2) {
+        //TODO
+    }
+
+    public void recordCompas(String androidId, float value, float value1, float value2) {
+        //TODO
+    }
 }
