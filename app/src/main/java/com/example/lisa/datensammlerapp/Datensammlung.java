@@ -297,7 +297,7 @@ public class Datensammlung extends AppCompatActivity {
                         roValY.setText("" + event.values[1]);
                         roValZ.setText("" + event.values[2]);
                         if (swchReState) {
-                            datenaufnahme.recordRotaion(androidId, event.values[0], event.values[1], event.values[2]);
+                            datenaufnahme.recordRotation(androidId, event.values[0], event.values[1], event.values[2]);
                         }
 
                         //Berechne Winkel
@@ -315,7 +315,7 @@ public class Datensammlung extends AppCompatActivity {
                         coValY.setText("" + event.values[1]);
                         coValZ.setText("" + event.values[2]);
                         if (swchReState) {
-                            datenaufnahme.recordCompas(androidId, event.values[0], event.values[1], event.values[2]);
+                            datenaufnahme.recordCompass(androidId, event.values[0], event.values[1], event.values[2]);
                         }
                         break;
                 }
