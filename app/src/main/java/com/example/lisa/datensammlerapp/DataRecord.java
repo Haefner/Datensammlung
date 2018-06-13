@@ -1,134 +1,156 @@
 package com.example.lisa.datensammlerapp;
 
 
+import android.os.Handler;
+
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
+
 
 //TODO DataRecord implementieren
 public class DataRecord {
+    JSONArray daten = new JSONArray();
+    final String androidID;
+    Datensammlung thread;
+    int daUebertragen = 0;
 //*#*#2846579#*#*
-    public void startRecordDate(String androidID)
+
+
+    final Handler timerHandler = new Handler();
+    final Runnable timerRunnable = new Runnable() {
+
+        @Override
+        final public void run() {
+            sendeDaten();
+            //System.gc();
+            timerHandler.postDelayed(this, 1000);
+        }
+    };
+
+    public DataRecord(Datensammlung ithread, String androidID)
     {
-        JSONObject body = new JSONObject();
+        thread = ithread;
+        this.androidID = androidID;
+    }
+    public void startRecordDate()
+    {
+       thread.runOnUiThread(new Runnable() {
+             @Override
+             public void run() {
+                 thread.daVal.setText("0/0");
+             }
+          }
+        );
+        daten = new JSONArray();
+        final JSONObject dBody = new JSONObject();
         try {
-            body.put("AndroidID", androidID);
+            dBody.put("AndroidID", androidID);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Communicator com = new Communicator();
-        com.execute("http://www.node.test.seda.com.de/starteMessung", body.toString());
+        daten.put(dBody);
+        final JSONObject sBody = new JSONObject();
+        try {
+            sBody.put("AndroidID", androidID);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        final Communicator com = new Communicator(this.thread);
+        com.execute("http://www.node.test.seda.com.de/starteMessung", sBody.toString(), 0);
+        timerHandler.postDelayed(timerRunnable, 1000);
     }
 
-    public void stopRecordDate(String androidID)
+    public void stopRecordDate()
     {
-        JSONObject body = new JSONObject();
+        daUebertragen = 0;
+        this.sendeDaten();
+        final JSONObject sBody = new JSONObject();
         try {
-            body.put("AndroidID", androidID);
+            sBody.put("AndroidID", androidID);
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        Communicator com = new Communicator();
-        com.execute("http://www.node.test.seda.com.de/beendeMessung", body.toString());
+        final Communicator com = new Communicator(this.thread);
+        com.execute("http://www.node.test.seda.com.de/beendeMessung", sBody.toString(), "Messung beendet");
+        timerHandler.removeCallbacks(timerRunnable);
     }
-    public void recordAccelometer(String androidID, double x, double y, double z)
+    public void recordAccelometer(double x, double y, double z)
     {
-        JSONArray array = new JSONArray();
-        JSONObject body = new JSONObject();
+        final JSONObject iBody = new JSONObject();
         try {
-            body.put("AndroidID", androidID);
+            iBody.put("Sensortyp", "Accelometer");
+            iBody.put("Zeitstempel", System.currentTimeMillis()+ "");
+            iBody.put("X", x + "");
+            iBody.put("Y", y + "");
+            iBody.put("Z", z + "");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        array.put(body);
-        body = new JSONObject();
-        try {
-            body.put("Sensortyp", "Accelometer");
-            body.put("Zeitstempel", System.currentTimeMillis()+ "");
-            body.put("X", x + "");
-            body.put("Y", y + "");
-            body.put("Z", z + "");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        array.put(body);
-        Communicator com = new Communicator();
-        com.execute("http://www.node.test.seda.com.de/schreibeSensor", array.toString());
+        daten.put(iBody);
     }
-    public void recordGyroscope(String androidID, double x, double y, double z)
+    public void recordGyroscope(double x, double y, double z)
     {
-        JSONArray array = new JSONArray();
-        JSONObject body = new JSONObject();
+        final JSONObject iBody = new JSONObject();
         try {
-            body.put("AndroidID", androidID);
+            iBody.put("Sensortyp", "Gyroscope");
+            iBody.put("Zeitstempel", System.currentTimeMillis() + "");
+            iBody.put("X", x + "");
+            iBody.put("Y", y + "");
+            iBody.put("Z", z + "");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        array.put(body);
-        body = new JSONObject();
-        try {
-            body.put("Sensortyp", "Gyroscope");
-            body.put("Zeitstempel", System.currentTimeMillis() + "");
-            body.put("X", x + "");
-            body.put("Y", y + "");
-            body.put("Z", z + "");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        array.put(body);
-        Communicator com = new Communicator();
-        com.execute("http://www.node.test.seda.com.de/schreibeSensor", array.toString());
+        daten.put(iBody);
     }
 
-    public void recordRotation(String androidID, double x, double y, double z)
+    public void recordRotation(double x, double y, double z)
     {
-        JSONArray array = new JSONArray();
-        JSONObject body = new JSONObject();
+        final JSONObject iBody = new JSONObject();
         try {
-            body.put("AndroidID", androidID);
+            iBody.put("Sensortyp", "Rotation");
+            iBody.put("Zeitstempel", System.currentTimeMillis() + "");
+            iBody.put("X", x + "");
+            iBody.put("Y", y + "");
+            iBody.put("Z", z + "");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        array.put(body);
-        body = new JSONObject();
-        try {
-            body.put("Sensortyp", "Rotation");
-            body.put("Zeitstempel", System.currentTimeMillis() + "");
-            body.put("X", x + "");
-            body.put("Y", y + "");
-            body.put("Z", z + "");
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        array.put(body);
-        Communicator com = new Communicator();
-        com.execute("http://www.node.test.seda.com.de/schreibeSensor", array.toString());
+        daten.put(iBody);
     }
 
-    public void recordCompass(String androidID, double x, double y, double z)
+    public void recordCompass(double x, double y, double z)
     {
-        JSONArray array = new JSONArray();
-        JSONObject body = new JSONObject();
+        final JSONObject iBody = new JSONObject();
         try {
-            body.put("AndroidID", androidID);
+            iBody.put("Sensortyp", "Magnetfeld");
+            iBody.put("Zeitstempel", System.currentTimeMillis() + "");
+            iBody.put("X", x + "");
+            iBody.put("Y", y + "");
+            iBody.put("Z", z + "");
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        array.put(body);
-        body = new JSONObject();
-        try {
-            body.put("Sensortyp", "Magnetfeld");
-            body.put("Zeitstempel", System.currentTimeMillis() + "");
-            body.put("X", x + "");
-            body.put("Y", y + "");
-            body.put("Z", z + "");
-        } catch (JSONException e) {
-            e.printStackTrace();
+        daten.put(iBody);
+    }
+    public void sendeDaten()
+    {
+        if (daten.length() > 1) {
+            daUebertragen += daten.length()-1;
+
+            final Communicator com = new Communicator(this.thread);
+            com.execute("http://www.node.test.seda.com.de/schreibeSensor", daten.toString(), daUebertragen);
+            daten = null;
+            daten = new JSONArray();
+            final JSONObject body = new JSONObject();
+            try {
+                body.put("AndroidID", androidID);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            daten.put(body);
         }
-        array.put(body);
-        Communicator com = new Communicator();
-        com.execute("http://www.node.test.seda.com.de/schreibeSensor", array.toString());
     }
 }

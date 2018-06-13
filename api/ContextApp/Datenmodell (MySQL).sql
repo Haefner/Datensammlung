@@ -1,21 +1,23 @@
 CREATE TABLE `Sensor_Accel` 
 ( 
-	`Android_ID` VARCHAR(32) NOT NULL,
+	`ID` INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	`Messung_Start` DATETIME NOT NULL,
+	`Android_ID` VARCHAR(32) NOT NULL,
 	`zeit` DOUBLE NOT NULL,
-	`X` DOUBLE,
-	`Y` DOUBLE,
-	`Z` DOUBLE
+	`X` DOUBLE NOT NULL,
+	`Y` DOUBLE NOT NULL,
+	`Z` DOUBLE NOT NULL
 ); 
 
 CREATE TABLE `Sensor_Gyro` 
 ( 
-	`Android_ID` VARCHAR(32) NOT NULL,
+	`ID` INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	`Messung_Start` DATETIME NOT NULL,
+	`Android_ID` VARCHAR(32) NOT NULL,
 	`zeit` DOUBLE NOT NULL,
-	`X` DOUBLE,
-	`Y` DOUBLE,
-	`Z` DOUBLE
+	`X` DOUBLE NOT NULL,
+	`Y` DOUBLE NOT NULL,
+	`Z` DOUBLE NOT NULL
 ); 
 
 CREATE TABLE `Datensatz` 
@@ -27,29 +29,28 @@ CREATE TABLE `Datensatz`
 
 CREATE TABLE `Sensor_Rota` 
 ( 
-	`Android_ID` VARCHAR(32) NOT NULL,
+	`ID` INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	`Messung_Start` DATETIME NOT NULL,
+	`Android_ID` VARCHAR(32) NOT NULL,
 	`zeit` DOUBLE NOT NULL,
-	`X` DOUBLE,
-	`Y` DOUBLE,
-	`Z` DOUBLE
+	`X` DOUBLE NOT NULL,
+	`Y` DOUBLE NOT NULL,
+	`Z` DOUBLE NOT NULL
 ); 
 
 CREATE TABLE `Sensor_Mag` 
 ( 
-	`Android_ID` VARCHAR(32) NOT NULL,
+	`ID` INTEGER NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	`Messung_Start` DATETIME NOT NULL,
+	`Android_ID` VARCHAR(32) NOT NULL,
 	`zeit` DOUBLE NOT NULL,
-	`X` DOUBLE,
-	`Y` DOUBLE,
-	`Z` DOUBLE
+	`X` DOUBLE NOT NULL,
+	`Y` DOUBLE NOT NULL,
+	`Z` DOUBLE NOT NULL
 ); 
 
-ALTER TABLE `Sensor_Accel` ADD PRIMARY KEY (`Android_ID`, `Messung_Start`, `zeit`);
-ALTER TABLE `Sensor_Gyro` ADD PRIMARY KEY (`Android_ID`, `Messung_Start`, `zeit`);
+
 ALTER TABLE `Datensatz` ADD PRIMARY KEY (`Android_ID`, `Messung_Start`);
-ALTER TABLE `Sensor_Rota` ADD PRIMARY KEY (`Android_ID`, `Messung_Start`, `zeit`);
-ALTER TABLE `Sensor_Mag` ADD PRIMARY KEY (`Android_ID`, `Messung_Start`, `zeit`);
 
 ALTER TABLE `Sensor_Accel` ADD CONSTRAINT `Sensor_Accel_Android_ID_Messung_Start_fkey` FOREIGN KEY (`Android_ID`,`Messung_Start`) REFERENCES `Datensatz`(`Android_ID`,`Messung_Start`);
 ALTER TABLE `Sensor_Gyro` ADD CONSTRAINT `Sensor_Gyro_Android_ID_Messung_Start_fkey` FOREIGN KEY (`Android_ID`,`Messung_Start`) REFERENCES `Datensatz`(`Android_ID`,`Messung_Start`);

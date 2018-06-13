@@ -1,35 +1,26 @@
 package com.example.lisa.datensammlerapp;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.location.LocationListener;
-import android.location.LocationManager;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.provider.Settings;
-import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
-
-import java.io.IOException;
 import java.util.LinkedList;
 
 public class Datensammlung extends AppCompatActivity {
 
-    DataRecord datenaufnahme = new DataRecord();
+    DataRecord datenaufnahme;
     //Test
     SensorManager sensorManager;
     SensorEventListener sensorEventListener;
@@ -86,7 +77,23 @@ public class Datensammlung extends AppCompatActivity {
     Boolean swchReState = false;
     Switch swchRe;
 
-    String androidId;
+    /**
+     * Angabe wie viele Datensätze aufgezeichnet wurden vs übertragene
+     */
+    TextView daVal;
+    int zuUebertragen = 0;
+
+    Handler timerHandler = new Handler();
+    Runnable timerRunnable = new Runnable() {
+
+        @Override
+        public void run() {
+            timerHandler.postDelayed(this, 200);
+            if (!daVal.getText().toString().startsWith("Fehler:")) {
+                daVal.setText(daVal.getText().toString().replaceAll("/[0-9]+", "/" + zuUebertragen));
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -97,7 +104,7 @@ public class Datensammlung extends AppCompatActivity {
         setUpSensorManager();
        // setUpLocationManager();
         setUpSwitch();
-        androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        datenaufnahme = new DataRecord(this, Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
     }
@@ -200,10 +207,14 @@ public class Datensammlung extends AppCompatActivity {
             public void onClick(View v) {
                 swchReState = swchRe.isChecked();
                 if (swchRe.isChecked()) {
-                    datenaufnahme.startRecordDate(androidId);
+                    daVal.setText("0/0");
+                    datenaufnahme.startRecordDate();
+                    timerHandler.postDelayed(timerRunnable, 200);
                     //acValX.setText(androidId);
                 } else {
-                    datenaufnahme.stopRecordDate(androidId);
+                    datenaufnahme.stopRecordDate();
+                    zuUebertragen = 0;
+                    timerHandler.removeCallbacks(timerRunnable);
                 }
             }
         });
@@ -279,7 +290,12 @@ public class Datensammlung extends AppCompatActivity {
                         gyValY.setText("" + event.values[1]);
                         gyValZ.setText("" + event.values[2]);
                         if (swchReState) {
-                            datenaufnahme.recordGyroscope(androidId, event.values[0], event.values[1], event.values[2]);
+                            datenaufnahme.recordGyroscope(event.values[0], event.values[1], event.values[2]);
+                            zuUebertragen +=1;
+                            /*if (!daVal.getText().toString().startsWith("Fehler:")) {
+                                String tmp[] = daVal.getText().toString().split("/");
+                                daVal.setText(daVal.getText().toString().replaceAll("/[0-9]+", "/" + (Integer.parseInt(tmp[1]) + 1)));
+                            }*/
                         }
                         break;
                     //Bewegungssensor Liniar
@@ -288,7 +304,12 @@ public class Datensammlung extends AppCompatActivity {
                         acValY.setText("" + event.values[1]);
                         acValZ.setText("" + event.values[2]);
                         if (swchReState) {
-                            datenaufnahme.recordAccelometer(androidId, event.values[0], event.values[1], event.values[2]);
+                            datenaufnahme.recordAccelometer(event.values[0], event.values[1], event.values[2]);
+                            zuUebertragen +=1;
+                            /*if (!daVal.getText().toString().startsWith("Fehler:")) {
+                                String tmp[] = daVal.getText().toString().split("/");
+                                daVal.setText(daVal.getText().toString().replaceAll("/[0-9]+", "/" + (Integer.parseInt(tmp[1]) + 1)));
+                            }*/
                         }
                         break;
                     //Rotation
@@ -297,7 +318,13 @@ public class Datensammlung extends AppCompatActivity {
                         roValY.setText("" + event.values[1]);
                         roValZ.setText("" + event.values[2]);
                         if (swchReState) {
-                            datenaufnahme.recordRotation(androidId, event.values[0], event.values[1], event.values[2]);
+                            datenaufnahme.recordRotation(event.values[0], event.values[1], event.values[2]);
+                            zuUebertragen +=1;
+                            /*
+                            if (!daVal.getText().toString().startsWith("Fehler:")) {
+                                String tmp[] = daVal.getText().toString().split("/");
+                                daVal.setText(daVal.getText().toString().replaceAll("/[0-9]+", "/" + (Integer.parseInt(tmp[1]) + 1)));
+                            }*/
                         }
 
                         //Berechne Winkel
@@ -315,7 +342,12 @@ public class Datensammlung extends AppCompatActivity {
                         coValY.setText("" + event.values[1]);
                         coValZ.setText("" + event.values[2]);
                         if (swchReState) {
-                            datenaufnahme.recordCompass(androidId, event.values[0], event.values[1], event.values[2]);
+                            datenaufnahme.recordCompass(event.values[0], event.values[1], event.values[2]);
+                            zuUebertragen +=1;
+                            /*if (!daVal.getText().toString().startsWith("Fehler:")) {
+                                String tmp[] = daVal.getText().toString().split("/");
+                                daVal.setText(daVal.getText().toString().replaceAll("/[0-9]+", "/" + (Integer.parseInt(tmp[1]) + 1)));
+                            }*/
                         }
                         break;
                 }
@@ -389,6 +421,9 @@ public class Datensammlung extends AppCompatActivity {
         acValX = findViewById(R.id.acValX);
         acValY = findViewById(R.id.acValY);
         acValZ = findViewById(R.id.acValZ);
+        acValX.setText("");
+        acValY.setText("");
+        acValZ.setText("");
         acHz = findViewById(R.id.acHz);
 
         //ID's for Gyroscope
@@ -396,6 +431,9 @@ public class Datensammlung extends AppCompatActivity {
         gyValX = findViewById(R.id.gyValX);
         gyValY = findViewById(R.id.gyValY);
         gyValZ = findViewById(R.id.gyValZ);
+        gyValX.setText("");
+        gyValY.setText("");
+        gyValZ.setText("");
         gyHz = findViewById(R.id.gyHz);
 
         //ID's for Rotation
@@ -403,6 +441,9 @@ public class Datensammlung extends AppCompatActivity {
         roValX = findViewById(R.id.roValX);
         roValY = findViewById(R.id.roValY);
         roValZ = findViewById(R.id.roValZ);
+        roValX.setText("");
+        roValY.setText("");
+        roValZ.setText("");
         degrees = findViewById(R.id.degrees);
         roHz = findViewById(R.id.roHz);
 
@@ -411,11 +452,16 @@ public class Datensammlung extends AppCompatActivity {
         coValX = findViewById(R.id.coValX);
         coValY = findViewById(R.id.coValY);
         coValZ = findViewById(R.id.coValZ);
+        coValX.setText("");
+        coValY.setText("");
+        coValZ.setText("");
         coHz = findViewById(R.id.coHz);
 
         //Sonstiges
         //Record
         swchRe = findViewById(R.id.swchRe);
+        daVal = findViewById(R.id.daVal);
+        daVal.setText("");
 
     }
 }
